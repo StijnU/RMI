@@ -5,7 +5,7 @@ import java.rmi.registry.Registry;
 import java.util.Date;
 import java.util.List;
 
-import rental.CarRentalCompany;
+
 import rental.ICarRentalCompany;
 import rental.Quote;
 import rental.Reservation;
@@ -17,8 +17,7 @@ public class Client extends AbstractTestBooking {
 	 ********/
 
 	private final static int LOCAL = 0;
-	private final static int REMOTE = 1;
-	
+	private final static int REMOTE = 1;	
 	public static final String _defaultRentalCompanyName = "Hertz";
 
 	/**
@@ -36,7 +35,8 @@ public class Client extends AbstractTestBooking {
 		System.setSecurityManager(null);}
 	
 		
-		System.out.println("hier");
+
+		
 		// An example reservation scenario on car rental company 'Hertz' would be...
 		Client client = new Client("simpleTrips", carRentalCompanyName, localOrRemote);
 		client.run();
@@ -126,10 +126,5 @@ public class Client extends AbstractTestBooking {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("TODO");
 	}
-//	
-//	public void run() {
-//		Registry registry = LocateRegistry.getRegistry();
-//		ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(_defaultRentalCompanyName);
-//		
-//	}
+
 }

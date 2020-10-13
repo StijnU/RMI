@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 public class CarRentalCompany implements ICarRentalCompany{
 
+
 	private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
 	
 	private List<String> regions;
@@ -34,8 +35,7 @@ public class CarRentalCompany implements ICarRentalCompany{
 		for(Car car:cars)
 			carTypes.put(car.getType().getName(), car.getType());
 		logger.log(Level.INFO, this.toString());
-		
-		
+
 	}
 
 	/********

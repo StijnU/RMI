@@ -58,8 +58,7 @@ public class RentalServer {
 			e.printStackTrace();
 			System.exit(-1);
 		}
-	    
-		
+
 	}
 
 	public static CrcData loadData(String datafile)

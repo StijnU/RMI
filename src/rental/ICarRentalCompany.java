@@ -33,6 +33,5 @@ public interface ICarRentalCompany extends Remote {
 	public boolean isAvailable(String carType, Date start, Date end) throws RemoteException;
 	
 	
-	
 
 }
