@@ -1,11 +1,15 @@
 package client;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
-
+import rental.CarType;
 import rental.ICarRentalCompany;
 import rental.Quote;
 import rental.Reservation;
@@ -42,14 +46,33 @@ public class Client extends AbstractTestBooking {
 		client.run();
 	}
 
+	/*************
+	 * ARGUMENTS *
+	 *************/
+	
+	private String rentalCompanyName;
+	private Registry registry;
+	private ICarRentalCompany rental;
+
 	/***************
 	 * CONSTRUCTOR *
 	 ***************/
-
-	public Client(String scriptFile, String carRentalCompanyName, int localOrRemote) {
+	
+	/**
+	 * Initialise a new client for a given car rental company
+	 * @param scriptFile
+	 * @param carRentalCompanyName
+	 * @param localOrRemote
+	 * @throws RemoteException  
+	 * @throws NotBoundException 
+	 */
+	
+	public Client(String scriptFile, String carRentalCompanyName, int localOrRemote) throws RemoteException, NotBoundException {
 		super(scriptFile);
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("TODO");
+		registry = LocateRegistry.getRegistry();
+		rental = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
+		System.out.println("Car Rental Company "+rental.getName()+" found.");
+		//Local en remote ding nog doen?
 	}
 
 	/**
@@ -62,8 +85,7 @@ public class Client extends AbstractTestBooking {
 	 */
 	@Override
 	protected void checkForAvailableCarTypes(Date start, Date end) throws Exception {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("TODO");
+		Set <CarType> = rental.getAvailableCarTypes(start, end);
 	}
 
 	/**

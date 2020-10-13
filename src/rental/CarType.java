@@ -1,6 +1,8 @@
-package rental;
+ package rental;
 
-public class CarType {
+import java.io.Serializable;
+
+public class CarType{
     
     private String name;
     private int nbOfSeats;
