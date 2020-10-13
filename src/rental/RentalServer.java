@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 
 public class RentalServer {
@@ -41,20 +43,23 @@ public class RentalServer {
 		Registry registry = null;
 		try {
 			registry = LocateRegistry.getRegistry();
+			if(registry == null) {
+				registry = LocateRegistry.createRegistry(1099);
+			}
 			
 		}
 		catch(RemoteException e) {
 //			logger.log(Level.SEVERE, "couldn't locate RMI registry.");
 			System.exit(-1);
 		}
-		//register CRC
+//		//register CRC
 		ICarRentalCompany stub;
 		try { 
 			stub = (ICarRentalCompany) UnicastRemoteObject.exportObject(crc, 0);
-			registry.rebind(_rentalCompanyName, stub);
-//			logger.log(Level.INFO, "<{0}> Car Rental Company <{0}> is registered", _rentalCompanyName);
+//			Naming.rebind("rmi://localhost:1099/RCR", stub);
+////			logger.log(Level.INFO, "<{0}> Car Rental Company <{0}> is registered", _rentalCompanyName);
 		}catch(RemoteException e) {
-//			logger.log(Level.SEVERE, "<{0}> Could not get stub bound", _rentalCompanyName);
+////			logger.log(Level.SEVERE, "<{0}> Could not get stub bound", _rentalCompanyName);
 			e.printStackTrace();
 			System.exit(-1);
 		}

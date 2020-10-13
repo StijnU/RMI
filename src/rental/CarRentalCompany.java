@@ -1,5 +1,6 @@
 package rental;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Collection;
@@ -13,7 +14,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CarRentalCompany implements ICarRentalCompany{
+public class CarRentalCompany implements ICarRentalCompany, Serializable{
 
 
 	private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
