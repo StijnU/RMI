@@ -5,6 +5,7 @@ import java.rmi.registry.Registry;
 import java.util.Date;
 import java.util.List;
 
+import rental.CarRentalCompany;
 import rental.ICarRentalCompany;
 import rental.Quote;
 import rental.Reservation;
@@ -17,6 +18,8 @@ public class Client extends AbstractTestBooking {
 
 	private final static int LOCAL = 0;
 	private final static int REMOTE = 1;
+	
+	public static final String _defaultRentalCompanyName = "Hertz";
 
 	/**
 	 * The `main` method is used to launch the client application and run the test
@@ -28,13 +31,12 @@ public class Client extends AbstractTestBooking {
 		int localOrRemote = (args.length == 1 && args[0].equals("REMOTE")) ? REMOTE : LOCAL;
 
 		String carRentalCompanyName = "Hertz";
-		String host = "localhost";
-		int port = 1000;
 		
-		System.setSecurityManager(null);
-		Registry registry = LocateRegistry.getRegistry(host,port);
-		ICarRentalCompany crc = (ICarRentalCompany) registry.lookup("CarRentalCompany");
+		if(System.getSecurityManager() != null) {
+		System.setSecurityManager(null);}
+	
 		
+		System.out.println("hier");
 		// An example reservation scenario on car rental company 'Hertz' would be...
 		Client client = new Client("simpleTrips", carRentalCompanyName, localOrRemote);
 		client.run();
@@ -124,4 +126,10 @@ public class Client extends AbstractTestBooking {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("TODO");
 	}
+//	
+//	public void run() {
+//		Registry registry = LocateRegistry.getRegistry();
+//		ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(_defaultRentalCompanyName);
+//		
+//	}
 }

@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CarRentalCompany extends UnicastRemoteObject implements ICarRentalCompany{
+public class CarRentalCompany implements ICarRentalCompany{
 
 	private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
 	
@@ -34,6 +34,8 @@ public class CarRentalCompany extends UnicastRemoteObject implements ICarRentalC
 		for(Car car:cars)
 			carTypes.put(car.getType().getName(), car.getType());
 		logger.log(Level.INFO, this.toString());
+		
+		
 	}
 
 	/********

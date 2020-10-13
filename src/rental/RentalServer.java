@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -12,28 +13,53 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class RentalServer {
 	
 	private final static int LOCAL = 0;
 	private final static int REMOTE = 1;
+	
+	private static final String _rentalCompanyName = "Hertz";
+	private static Logger logger = Logger.getLogger(RentalServer.class.getName(), null);
 
 	public static void main(String[] args) throws ReservationException,
 			NumberFormatException, IOException {
 		// The first argument passed to the `main` method (if present)
 		// indicates whether the application is run on the remote setup or not.
 		int localOrRemote = (args.length == 1 && args[0].equals("REMOTE")) ? REMOTE : LOCAL;
-		
-		//added Louis
-		System.setSecurityManager(null);
+
+		if(System.getSecurityManager() != null) {
+			System.setSecurityManager(null);}
 		
 		CrcData data  = loadData("hertz.csv");
-		CarRentalCompany crc = new CarRentalCompany(data.name, data.regions, data.cars);
+		ICarRentalCompany crc = new CarRentalCompany(data.name, data.regions, data.cars);
 		
-		//added Louis
-		ICarRentalCompany stub = (ICarRentalCompany) UnicastRemoteObject.exportObject(crc,0);
-		Registry registry = LocateRegistry.getRegistry();
-		registry.rebind("CarRentalCompany", stub);
+		//locate registry
+		Registry registry = null;
+		try {
+			registry = LocateRegistry.getRegistry();
+			
+		}
+		catch(RemoteException e) {
+//			logger.log(Level.SEVERE, "couldn't locate RMI registry.");
+			System.exit(-1);
+		}
+		//register CRC
+		ICarRentalCompany stub;
+		try { 
+			stub = (ICarRentalCompany) UnicastRemoteObject.exportObject(crc, 0);
+			registry.rebind(_rentalCompanyName, stub);
+//			logger.log(Level.INFO, "<{0}> Car Rental Company <{0}> is registered", _rentalCompanyName);
+		}catch(RemoteException e) {
+//			logger.log(Level.SEVERE, "<{0}> Could not get stub bound", _rentalCompanyName);
+			e.printStackTrace();
+			System.exit(-1);
+		}
+	    
+		
 	}
 
 	public static CrcData loadData(String datafile)
