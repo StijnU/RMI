@@ -2,7 +2,7 @@
 
 import java.io.Serializable;
 
-public class CarType{
+public class CarType implements Serializable{
     
     private String name;
     private int nbOfSeats;

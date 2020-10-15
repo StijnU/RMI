@@ -110,6 +110,10 @@ public class CarRentalCompany implements ICarRentalCompany{
 		throw new IllegalArgumentException("<" + name + "> No car with uid " + uid);
 	}
 	
+	public List<Car> getAllCars() {
+		return cars;
+	}
+	
 	private List<Car> getAvailableCars(String carType, Date start, Date end) {
 		List<Car> availableCars = new LinkedList<Car>();
 		for (Car car : cars) {

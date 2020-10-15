@@ -4,10 +4,13 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import rental.Car;
 import rental.CarType;
 import rental.ICarRentalCompany;
 import rental.Quote;
@@ -26,7 +29,6 @@ public class Client extends AbstractTestBooking {
 	//constructor args
 	private String carRentalCompanyName;
 	private int localOrRemote;
-	private List<Reservation> reservations;
 
 
 	/**
@@ -68,20 +70,21 @@ public class Client extends AbstractTestBooking {
 	protected void checkForAvailableCarTypes(Date start, Date end) throws Exception {
 		try {
 			Registry registry = LocateRegistry.getRegistry();
-			ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
-			System.out.println("Car rental company " + rental.getName() + " is found." );
+			String[] allCarRentalCompanies = registry.list();
+			Set<CarType> allCarTypes = new HashSet<>();
+			for (String company : allCarRentalCompanies) {
+				ICarRentalCompany companyRemote = (ICarRentalCompany) registry.lookup(company);
+				allCarTypes.addAll(companyRemote.getAvailableCarTypes(start, end));
+			}
 			
-			Set<CarType> carTypes = rental.getAvailableCarTypes(start, end);
-			
-			System.out.println("Available car types: ");
-			
-			for (CarType carType : carTypes){
-			System.out.println(carType.getName());
+			System.out.println("Printing available car types:");
+			for(CarType carType : allCarTypes) {
+				System.out.println(carType.getName());
 			}
 			
 		}
 		catch(NotBoundException e) {
-			System.err.println("Could not find car rental company with given name");
+			System.err.println("Could not find car rental company with given name " + carRentalCompanyName);
 		}
 		catch (RemoteException e) {
 			System.err.println(e.getMessage());	
@@ -104,14 +107,20 @@ public class Client extends AbstractTestBooking {
 	@Override
 	protected Quote createQuote(String clientName, Date start, Date end, String carType, String region)
 			throws Exception {
-		Registry registry = LocateRegistry.getRegistry();
-		ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
-		System.out.println("Car rental company " + rental.getName() + " is found." );
-		
-		ReservationConstraints constraints = new ReservationConstraints(start, end, carType, region);
-		
-		Quote quote =  rental.createQuote(constraints, clientName);
-		
+		Quote quote = null;
+		try {
+			Registry registry = LocateRegistry.getRegistry();
+			ICarRentalCompany companyRemote = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
+			System.out.println("Car rental company " + companyRemote.getName() + " is found." );
+			ReservationConstraints constraints = new ReservationConstraints(start, end, carType, region);
+			quote =  companyRemote.createQuote(constraints, clientName);
+		}
+		catch(NotBoundException e) {
+			System.err.println("Could not find car rental company with given name " + carRentalCompanyName);
+		}
+		catch (RemoteException e) {
+			System.err.println(e.getMessage());
+		}
 		return quote;
 		
 	}
@@ -126,11 +135,19 @@ public class Client extends AbstractTestBooking {
 	 */
 	@Override
 	protected Reservation confirmQuote(Quote quote) throws Exception {
-		Registry registry = LocateRegistry.getRegistry();
-		ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
-		
-		Reservation reservation = rental.confirmQuote(quote);
-		this.reservations.add(reservation);
+		Reservation reservation = null;
+		try {	
+			Registry registry = LocateRegistry.getRegistry();
+			ICarRentalCompany companyRemote = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
+			
+			reservation = companyRemote.confirmQuote(quote);
+			}
+		catch(NotBoundException e) {
+			System.err.println("Could not find car rental company with given name " + carRentalCompanyName);
+		}
+		catch (RemoteException e) {
+			System.err.println(e.getMessage());
+			}
 		return reservation;
 		
 	}
@@ -145,7 +162,28 @@ public class Client extends AbstractTestBooking {
 	 */
 	@Override
 	protected List<Reservation> getReservationsByRenter(String clientName) throws Exception {
-		return this.reservations;
+		List<Reservation> reservations = new ArrayList<>();
+		try {
+			Registry registry = LocateRegistry.getRegistry();
+			ICarRentalCompany companyRemote = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
+			List<Car> allCars = companyRemote.getAllCars();
+			allCars.forEach((car) -> {
+				car.getAllReservations().forEach((reservation) -> {
+					if (reservation.getCarRenter().equals(clientName)) {
+						reservations.add(reservation);
+					}
+					;
+				});
+			});
+		} 
+		catch(NotBoundException e) {
+			System.err.println("Could not find car rental company with given name " + carRentalCompanyName);
+		}
+		catch (RemoteException e) {
+			System.err.println(e.getMessage());
+			}
+		
+		return reservations;
 	}
 
 	/**
@@ -158,10 +196,27 @@ public class Client extends AbstractTestBooking {
 	 */
 	@Override
 	protected int getNumberOfReservationsForCarType(String carType) throws Exception {
-		Registry registry = LocateRegistry.getRegistry();
-		ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
+		List <Reservation> eachCarReservations = new ArrayList<>();
 		
-		Integer reservationAmount = rental.getReservationAmount(carType);
-		return reservationAmount;
+		try{
+			Registry registry = LocateRegistry.getRegistry();
+			ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
+			List<Car> allCars = rental.getAllCars();
+			allCars.forEach((car) -> {
+				car.getAllReservations().forEach((reservation) -> {
+					if (reservation.getCarType().equals(carType)) {
+						eachCarReservations.add(reservation);
+					}
+					;
+				});
+			});
+		}
+		catch(NotBoundException e) {
+			System.err.println("Could not find car rental company with given name " + carRentalCompanyName);
+		}
+		catch (RemoteException e) {
+			System.err.println(e.getMessage());
+			}
+		return eachCarReservations.size();
 	}
 }
