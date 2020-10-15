@@ -6,10 +6,13 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import rental.CarType;
 import rental.ICarRentalCompany;
 import rental.Quote;
 import rental.Reservation;
+import rental.ReservationConstraints;
 
 public class Client extends AbstractTestBooking {
 
@@ -23,6 +26,7 @@ public class Client extends AbstractTestBooking {
 	//constructor args
 	private String carRentalCompanyName;
 	private int localOrRemote;
+	private List<Reservation> reservations;
 
 
 	/**
@@ -49,7 +53,7 @@ public class Client extends AbstractTestBooking {
 		super(scriptFile);
 		
 		this.carRentalCompanyName = carRentalCompanyName;
-		this.localOrRemote = localOrRemote;
+		this.localOrRemote = localOrRemote; 
 	}
 
 	/**
@@ -66,6 +70,14 @@ public class Client extends AbstractTestBooking {
 			Registry registry = LocateRegistry.getRegistry();
 			ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
 			System.out.println("Car rental company " + rental.getName() + " is found." );
+			
+			Set<CarType> carTypes = rental.getAvailableCarTypes(start, end);
+			
+			System.out.println("Available car types: ");
+			
+			for (CarType carType : carTypes){
+			System.out.println(carType.getName());
+			}
 			
 		}
 		catch(NotBoundException e) {
@@ -92,8 +104,16 @@ public class Client extends AbstractTestBooking {
 	@Override
 	protected Quote createQuote(String clientName, Date start, Date end, String carType, String region)
 			throws Exception {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("TODO");
+		Registry registry = LocateRegistry.getRegistry();
+		ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
+		System.out.println("Car rental company " + rental.getName() + " is found." );
+		
+		ReservationConstraints constraints = new ReservationConstraints(start, end, carType, region);
+		
+		Quote quote =  rental.createQuote(constraints, clientName);
+		
+		return quote;
+		
 	}
 
 	/**
@@ -106,8 +126,13 @@ public class Client extends AbstractTestBooking {
 	 */
 	@Override
 	protected Reservation confirmQuote(Quote quote) throws Exception {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("TODO");
+		Registry registry = LocateRegistry.getRegistry();
+		ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
+		
+		Reservation reservation = rental.confirmQuote(quote);
+		this.reservations.add(reservation);
+		return reservation;
+		
 	}
 
 	/**
@@ -120,8 +145,7 @@ public class Client extends AbstractTestBooking {
 	 */
 	@Override
 	protected List<Reservation> getReservationsByRenter(String clientName) throws Exception {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("TODO");
+		return this.reservations;
 	}
 
 	/**
@@ -134,7 +158,10 @@ public class Client extends AbstractTestBooking {
 	 */
 	@Override
 	protected int getNumberOfReservationsForCarType(String carType) throws Exception {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("TODO");
+		Registry registry = LocateRegistry.getRegistry();
+		ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
+		
+		Integer reservationAmount = rental.getReservationAmount(carType);
+		return reservationAmount;
 	}
 }

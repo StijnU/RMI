@@ -19,6 +19,7 @@ public class CarRentalCompany implements ICarRentalCompany{
 	private String name;
 	private List<Car> cars;
 	private Map<String,CarType> carTypes = new HashMap<String, CarType>();
+	private Map<CarType, Integer> reservationAmount = new HashMap<CarType, Integer>();
 
 	/***************
 	 * CONSTRUCTOR *
@@ -31,6 +32,8 @@ public class CarRentalCompany implements ICarRentalCompany{
 		setRegions(regions);
 		for(Car car:cars)
 			carTypes.put(car.getType().getName(), car.getType());
+		for(Car car:cars)
+			reservationAmount.put(car.getType(), 0);
 		logger.log(Level.INFO, this.toString());
 	}
 
@@ -154,6 +157,7 @@ public class CarRentalCompany implements ICarRentalCompany{
 		
 		Reservation res = new Reservation(quote, car.getId());
 		car.addReservation(res);
+		reservationAmount.put(car.getType(), reservationAmount.get(car.getType()) + 1);
 		return res;
 	}
 
@@ -177,6 +181,11 @@ public class CarRentalCompany implements ICarRentalCompany{
 			}
 		}
 		return out.toString();
+	}
+	
+	public Integer getReservationAmount(CarType carType) {
+		Integer nb = this.reservationAmount.get(carType);
+		return nb;
 	}
 	
 }

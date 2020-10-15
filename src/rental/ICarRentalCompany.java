@@ -33,5 +33,29 @@ public interface ICarRentalCompany extends Remote {
 	 */
 	public boolean isAvailable(String carType, Date start, Date end) throws RemoteException;
 	
-
+	/**
+	 * 
+	 * @param constraints
+	 * @param client
+	 * @return
+	 * @throws RemoteException
+	 */
+	public Quote createQuote(ReservationConstraints constraints, String client) throws RemoteException, ReservationException;
+	
+	/**
+	 * 
+	 * @param quote
+	 * @return
+	 * @throws ReservationException
+	 * @throws RemoteException
+	 */
+	public Reservation confirmQuote(Quote quote) throws RemoteException, ReservationException; 
+	
+	/**
+	 * 
+	 * @param carType
+	 * @return
+	 * @throws RemoteException
+	 */
+	public Integer getReservationAmount(CarType carType) throws RemoteException;
 }
