@@ -1,8 +1,5 @@
 package rental;
 
-import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,8 +11,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CarRentalCompany implements ICarRentalCompany, Serializable{
-
+public class CarRentalCompany implements ICarRentalCompany{
 
 	private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());
 	
@@ -28,7 +24,7 @@ public class CarRentalCompany implements ICarRentalCompany, Serializable{
 	 * CONSTRUCTOR *
 	 ***************/
 
-	public CarRentalCompany(String name, List<String> regions, List<Car> cars) throws RemoteException{
+	public CarRentalCompany(String name, List<String> regions, List<Car> cars) {
 		logger.log(Level.INFO, "<{0}> Car Rental Company {0} starting up...", name);
 		setName(name);
 		this.cars = cars;
@@ -36,14 +32,13 @@ public class CarRentalCompany implements ICarRentalCompany, Serializable{
 		for(Car car:cars)
 			carTypes.put(car.getType().getName(), car.getType());
 		logger.log(Level.INFO, this.toString());
-
 	}
 
 	/********
 	 * NAME *
 	 ********/
 
-	public String getName() throws RemoteException {
+	public String getName() {
 		return name;
 	}
 
@@ -127,7 +122,7 @@ public class CarRentalCompany implements ICarRentalCompany, Serializable{
 	 ****************/
 
 	public Quote createQuote(ReservationConstraints constraints, String client)
-			throws RemoteException, ReservationException {
+			throws ReservationException {
 		logger.log(Level.INFO, "<{0}> Creating tentative reservation for {1} with constraints {2}", 
                         new Object[]{name, client, constraints.toString()});
 		
@@ -149,7 +144,7 @@ public class CarRentalCompany implements ICarRentalCompany, Serializable{
 						/ (1000 * 60 * 60 * 24D));
 	}
 
-	public Reservation confirmQuote(Quote quote) throws RemoteException, ReservationException {
+	public Reservation confirmQuote(Quote quote) throws ReservationException {
 		logger.log(Level.INFO, "<{0}> Reservation of {1}", new Object[]{name, quote.toString()});
 		List<Car> availableCars = getAvailableCars(quote.getCarType(), quote.getStartDate(), quote.getEndDate());
 		if(availableCars.isEmpty())

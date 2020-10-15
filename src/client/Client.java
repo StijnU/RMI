@@ -1,8 +1,13 @@
 package client;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Date;
 import java.util.List;
 
+import rental.ICarRentalCompany;
 import rental.Quote;
 import rental.Reservation;
 
@@ -14,6 +19,11 @@ public class Client extends AbstractTestBooking {
 
 	private final static int LOCAL = 0;
 	private final static int REMOTE = 1;
+	
+	//constructor args
+	private String carRentalCompanyName;
+	private int localOrRemote;
+
 
 	/**
 	 * The `main` method is used to launch the client application and run the test
@@ -37,8 +47,9 @@ public class Client extends AbstractTestBooking {
 
 	public Client(String scriptFile, String carRentalCompanyName, int localOrRemote) {
 		super(scriptFile);
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("TODO");
+		
+		this.carRentalCompanyName = carRentalCompanyName;
+		this.localOrRemote = localOrRemote;
 	}
 
 	/**
@@ -51,8 +62,19 @@ public class Client extends AbstractTestBooking {
 	 */
 	@Override
 	protected void checkForAvailableCarTypes(Date start, Date end) throws Exception {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("TODO");
+		try {
+			Registry registry = LocateRegistry.getRegistry();
+			ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
+			System.out.println("Car rental company " + rental.getName() + " is found." );
+			
+		}
+		catch(NotBoundException e) {
+			System.err.println("Could not find car rental company with given name");
+		}
+		catch (RemoteException e) {
+			System.err.println(e.getMessage());	
+		}
+		
 	}
 
 	/**

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Set;
 
 public interface ICarRentalCompany extends Remote {
+	
 	/**
 	 * 
 	 * @return
@@ -31,7 +32,6 @@ public interface ICarRentalCompany extends Remote {
 	 * @throws RemoteException
 	 */
 	public boolean isAvailable(String carType, Date start, Date end) throws RemoteException;
-	
 	
 
 }
