@@ -131,6 +131,7 @@ public class Client extends AbstractTestBooking {
 		
 		Reservation reservation = rental.confirmQuote(quote);
 		this.reservations.add(reservation);
+		System.out.println("Reservation confirmed.")
 		return reservation;
 		
 	}
@@ -145,6 +146,19 @@ public class Client extends AbstractTestBooking {
 	 */
 	@Override
 	protected List<Reservation> getReservationsByRenter(String clientName) throws Exception {
+		int i = 1;
+		for (Reservation reservation : this.reservations) {
+			int carID 		= reservation.getCarId();
+			String carType = reservation.getCarType();
+			Date start 		= reservation.getStartDate();
+			Date end 		= reservation.getEndDate();
+			Double price		= reservation.getRentalPrice();
+			i += 1;
+			
+			System.out.println("Reservation "+ i +"\n"+"Car ID: "+ carID +"\n"+"CarType: "+ carType +"\n"
+					+"Start: "+start+"\n"+"End: "+end+"\n"+" Price: "+price+" EUR");
+			
+		}
 		return this.reservations;
 	}
 
@@ -161,7 +175,7 @@ public class Client extends AbstractTestBooking {
 		Registry registry = LocateRegistry.getRegistry();
 		ICarRentalCompany rental = (ICarRentalCompany) registry.lookup(carRentalCompanyName);
 		
-		Integer reservationAmount = rental.getReservationAmount(carType);
+		int reservationAmount = rental.getReservationAmount(carType);
 		return reservationAmount;
 	}
 }

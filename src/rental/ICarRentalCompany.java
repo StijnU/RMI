@@ -47,7 +47,6 @@ public interface ICarRentalCompany extends Remote {
 	 * @param quote
 	 * @return
 	 * @throws ReservationException
-	 * @throws RemoteException
 	 */
 	public Reservation confirmQuote(Quote quote) throws RemoteException, ReservationException; 
 	
@@ -57,5 +56,5 @@ public interface ICarRentalCompany extends Remote {
 	 * @return
 	 * @throws RemoteException
 	 */
-	public Integer getReservationAmount(CarType carType) throws RemoteException;
+	public int getReservationAmount(String carType) throws RemoteException; 
 }

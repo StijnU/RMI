@@ -18,7 +18,7 @@ public class CarRentalCompany implements ICarRentalCompany{
 	private List<String> regions;
 	private String name;
 	private List<Car> cars;
-	private Map<String,CarType> carTypes = new HashMap<String, CarType>();
+	private Map<String, CarType> carTypes = new HashMap<String, CarType>();
 	private Map<CarType, Integer> reservationAmount = new HashMap<CarType, Integer>();
 
 	/***************
@@ -183,8 +183,8 @@ public class CarRentalCompany implements ICarRentalCompany{
 		return out.toString();
 	}
 	
-	public Integer getReservationAmount(CarType carType) {
-		Integer nb = this.reservationAmount.get(carType);
+	public int getReservationAmount(String carType) {
+		int nb = this.reservationAmount.get(carTypes.get(carType));
 		return nb;
 	}
 	
