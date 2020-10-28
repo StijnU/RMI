@@ -6,17 +6,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
 import java.rmi.AlreadyBoundException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 
 public class RentalServer {
@@ -32,9 +34,12 @@ public class RentalServer {
 		// The first argument passed to the `main` method (if present)
 		// indicates whether the application is run on the remote setup or not.
 		int localOrRemote = (args.length == 1 && args[0].equals("REMOTE")) ? REMOTE : LOCAL;
+		
+		Set <String> AllCarRentalCompanies = new HashSet<String>();
+		AllCarRentalCompanies.add("dockx");
+		AllCarRentalCompanies.add("hertz");
 
-		CrcData data  = loadData("hertz.csv");
-		CarRentalCompany crc = new CarRentalCompany(data.name, data.regions, data.cars);
+		
 		
 		// set security manager if non existent
 		if (System.getSecurityManager() != null)
@@ -51,16 +56,23 @@ public class RentalServer {
 			System.exit(-1);
 		}
 
-		// register car rental company
-		ICarRentalCompany stub;
-		try {
-			stub = (ICarRentalCompany) UnicastRemoteObject.exportObject(crc, 0);
-			registry.rebind(crc.getName(), stub);
-		} catch (RemoteException e) {
-			logger.log(Level.SEVERE, "could not register stub");
-			logger.log(Level.SEVERE, e.getMessage());
-		}
+		// register car rental company		
+		for (String s : AllCarRentalCompanies) {
+			ICarRentalCompany stub;
+		    String fileName = s + ".csv";
+		    
+		    CrcData data  = loadData(fileName);
+		    CarRentalCompany crc = new CarRentalCompany(data.name, data.regions, data.cars);
+		    
+		    try {
+		    	stub = (ICarRentalCompany) UnicastRemoteObject.exportObject(crc, 0);
+		    	registry.rebind(crc.getName(), stub);
+		    } catch (RemoteException e) {
+				logger.log(Level.SEVERE, "could not register stub");
+				logger.log(Level.SEVERE, e.getMessage());
+		    }
 		
+		}
 	}
 
 	public static CrcData loadData(String datafile)
