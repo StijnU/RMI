@@ -14,7 +14,12 @@ import rental.ICarRentalCompany;
 
 public class RentalAgency implements IRentalAgency{
 	
-	
+	private String name;
+
+	public RentalAgency(String name) {
+		this.name = name;
+	}
+
 	
 	
 
@@ -42,5 +47,25 @@ public class RentalAgency implements IRentalAgency{
 	
 		return AllCarRentalCompanies;
 		
+	}
+
+
+
+	@Override
+	public ReservationSession createReservationSession(String clientName) throws RemoteException {
+			return new ReservationSession(clientName);
+	}
+	
+	@Override
+	public ManagerSession createManagerSession(String clientName) throws RemoteException {
+			return new ManagerSession(clientName);
+	}
+
+
+
+
+	@Override
+	public String getName() throws RemoteException {
+		return this.name;
 	}
 }

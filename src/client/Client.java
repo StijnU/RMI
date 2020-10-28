@@ -14,8 +14,11 @@ import java.util.StringTokenizer;
 import rental.CarType;
 import rental.Quote;
 import rental.Reservation;
+import rentalAgency.IRentalAgency;
+import rentalAgency.ManagerSession;
+import rentalAgency.ReservationSession;
 
-public class Client extends AbstractTestBooking {
+public class Client extends AbstractTestManagement<ReservationSession, ManagerSession> {
 
 	/********
 	 * MAIN *
@@ -25,7 +28,7 @@ public class Client extends AbstractTestBooking {
 	private final static int REMOTE = 1;
 	
 	//constructor args
-	private String carRentalCompanyName;
+	private String rentalAgencyName;
 	private int localOrRemote;
 
 
@@ -38,10 +41,8 @@ public class Client extends AbstractTestBooking {
 		// indicates whether the application is run on the remote setup or not.
 		int localOrRemote = (args.length == 1 && args[0].equals("REMOTE")) ? REMOTE : LOCAL;
 
-		String carRentalCompanyName = "Hertz";
 
-		// An example reservation scenario on car rental company 'Hertz' would be...
-		Client client = new Client("simpleTrips", carRentalCompanyName, localOrRemote);
+		Client client = new Client("trips", localOrRemote);
 		client.run();
 	}
 
@@ -49,52 +50,77 @@ public class Client extends AbstractTestBooking {
 	 * CONSTRUCTOR *
 	 ***************/
 
-	public Client(String scriptFile, String carRentalCompanyName, int localOrRemote) {
+	public Client(String scriptFile, int localOrRemote) {
 		super(scriptFile);
-		
-		this.carRentalCompanyName = carRentalCompanyName;
 		this.localOrRemote = localOrRemote; 
+		this.rentalAgencyName = "rental-agency";
 	}
 
+
+	
 	@Override
-	protected Object getNewReservationSession(String name) throws Exception {
+	protected Set<String> getBestClients(ManagerSession ms) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected Object getNewManagerSession(String name) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected void checkForAvailableCarTypes(Object session, Date start, Date end) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void addQuoteToSession(Object session, String name, Date start, Date end, String carType, String region)
+	protected String getCheapestCarType(ReservationSession session, Date start, Date end, String region)
 			throws Exception {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
-	protected List confirmQuotes(Object session, String name) throws Exception {
+	protected CarType getMostPopularCarTypeInCRC(ManagerSession ms, String carRentalCompanyName, int year)
+			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected int getNumberOfReservationsByRenter(Object ms, String clientName) throws Exception {
+	protected ReservationSession getNewReservationSession(String name) throws Exception {
+		Registry registry = LocateRegistry.getRegistry();
+		IRentalAgency agencyRemote = (IRentalAgency) registry.lookup(rentalAgencyName);
+		
+		return agencyRemote.createReservationSession(name);
+	}
+
+	@Override
+	protected ManagerSession getNewManagerSession(String name) throws Exception {
+		Registry registry = LocateRegistry.getRegistry();
+		IRentalAgency agencyRemote = (IRentalAgency) registry.lookup(rentalAgencyName);
+		return agencyRemote.createManagerSession(name);
+	}
+
+	@Override
+	protected void checkForAvailableCarTypes(ReservationSession session, Date start, Date end) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void addQuoteToSession(ReservationSession session, String name, Date start, Date end, String carType,
+			String region) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected List<Reservation> confirmQuotes(ReservationSession session, String name) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected int getNumberOfReservationsByRenter(ManagerSession ms, String clientName) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	protected int getNumberOfReservationsForCarType(Object ms, String carRentalName, String carType) throws Exception {
+	protected int getNumberOfReservationsForCarType(ManagerSession ms, String carRentalName, String carType)
+			throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}

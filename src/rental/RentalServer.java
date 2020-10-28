@@ -19,6 +19,8 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import rentalAgency.RentalAgencyServer;
+
 
 
 public class RentalServer {
@@ -29,17 +31,12 @@ public class RentalServer {
 	private static Logger logger = Logger.getLogger(RentalServer.class.getName());
 
 	
-	public static void main(String[] args) throws ReservationException,
+	public static void main(String[] args, String name) throws ReservationException,
 			NumberFormatException, IOException, AlreadyBoundException {
 		// The first argument passed to the `main` method (if present)
 		// indicates whether the application is run on the remote setup or not.
 		int localOrRemote = (args.length == 1 && args[0].equals("REMOTE")) ? REMOTE : LOCAL;
-		
-		Set <String> AllCarRentalCompanies = new HashSet<String>();
-		AllCarRentalCompanies.add("dockx");
-		AllCarRentalCompanies.add("hertz");
 
-		
 		
 		// set security manager if non existent
 		if (System.getSecurityManager() != null)
@@ -57,22 +54,20 @@ public class RentalServer {
 		}
 
 		// register car rental company		
-		for (String s : AllCarRentalCompanies) {
-			ICarRentalCompany stub;
-		    String fileName = s + ".csv";
+	
+		ICarRentalCompany stub;
+	    String fileName = name + ".csv";
+	    
+	    CrcData data  = loadData(fileName);
+	    CarRentalCompany crc = new CarRentalCompany(data.name, data.regions, data.cars);
 		    
-		    CrcData data  = loadData(fileName);
-		    CarRentalCompany crc = new CarRentalCompany(data.name, data.regions, data.cars);
-		    
-		    try {
-		    	stub = (ICarRentalCompany) UnicastRemoteObject.exportObject(crc, 0);
-		    	registry.rebind(crc.getName(), stub);
-		    } catch (RemoteException e) {
-				logger.log(Level.SEVERE, "could not register stub");
-				logger.log(Level.SEVERE, e.getMessage());
-		    }
-		
-		}
+	    try {
+	    	stub = (ICarRentalCompany) UnicastRemoteObject.exportObject(crc, 0);
+	    	registry.rebind(crc.getName(), stub);
+	    } catch (RemoteException e) {
+			logger.log(Level.SEVERE, "could not register stub");
+			logger.log(Level.SEVERE, e.getMessage());
+	    }	
 	}
 
 	public static CrcData loadData(String datafile)

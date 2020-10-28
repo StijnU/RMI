@@ -136,6 +136,7 @@ public abstract class AbstractTestBooking<ReservationSession, ManagerSession> ex
 		//
 		// Pre processing command 
 		//
+
 		Date startDate = null, endDate = null;		
 		if (cmd.equals("BA") || cmd.equals("BB")) {
 			try {
