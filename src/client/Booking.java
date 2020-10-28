@@ -12,6 +12,9 @@ import rentalAgency.ReservationSession;
 
 public class Booking extends AbstractTestBooking<ReservationSession, ManagerSession>{
 
+	
+	//Voorlopig leeg laten (LOUIS)
+	
 	private String rentalAgencyName;
 	
 	public Booking(String scriptFile, String rentalAgencyName) {

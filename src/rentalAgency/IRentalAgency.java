@@ -10,7 +10,7 @@ public interface IRentalAgency extends Remote{
 	
 	public String getName() throws RemoteException;
 	
-	public Set<ICarRentalCompany> getAllCarRentalCompanies() throws RemoteException;
+//	public Set<ICarRentalCompany> getAllCarRentalCompanies() throws RemoteException;
 	
 	public ReservationSession createReservationSession(String clientName) throws RemoteException;
 
