@@ -24,11 +24,11 @@ public class RentalAgency implements IRentalAgency{
 
 	
 	
-	protected void setRegisteredCarRentalCompany(String carRentalCompany) {
+	protected synchronized void setRegisteredCarRentalCompany(String carRentalCompany) {
 		allRegisteredCarCompanies.add(carRentalCompany);
 	}
 	
-	protected void unsetRegisteredCarRentalCompany(String carRentalCompany) {
+	protected synchronized void unsetRegisteredCarRentalCompany(String carRentalCompany) {
 		allRegisteredCarCompanies.remove(carRentalCompany);
 	}
 	
