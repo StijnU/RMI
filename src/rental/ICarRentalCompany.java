@@ -66,4 +66,11 @@ public interface ICarRentalCompany extends Remote {
 	 * @throws RemoteException
 	 */
 	public Integer getReservationAmount(CarType carType) throws RemoteException;
+	
+	/**
+	 * 
+	 * @return
+	 * @throws RemoteException
+	 */
+	public List<String> getRegions() throws RemoteException;
 }

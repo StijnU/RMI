@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 import rental.CarType;
 import rental.Quote;
 import rental.Reservation;
+import rental.ReservationConstraints;
 import rentalAgency.IRentalAgency;
 import rentalAgency.ManagerSession;
 import rentalAgency.ReservationSession;
@@ -67,8 +68,12 @@ public class Client extends AbstractTestManagement<ReservationSession, ManagerSe
 	@Override
 	protected String getCheapestCarType(ReservationSession session, Date start, Date end, String region)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Registry registry = LocateRegistry.getRegistry();
+		IRentalAgency rentalAgency = (IRentalAgency) registry.lookup(rentalAgencyName);
+		
+		CarType cheapestCarType = session.getCheapestCarType(rentalAgency, start, end, region);
+		String carName = cheapestCarType.getName();
+		return carName;
 	}
 
 	@Override
@@ -81,35 +86,44 @@ public class Client extends AbstractTestManagement<ReservationSession, ManagerSe
 	@Override
 	protected ReservationSession getNewReservationSession(String name) throws Exception {
 		Registry registry = LocateRegistry.getRegistry();
-		IRentalAgency agencyRemote = (IRentalAgency) registry.lookup(rentalAgencyName);
+		IRentalAgency rentalAgency = (IRentalAgency) registry.lookup(rentalAgencyName);
 		
-		return agencyRemote.createReservationSession(name);
+		return rentalAgency.createReservationSession(name);
 	}
 
 	@Override
 	protected ManagerSession getNewManagerSession(String name) throws Exception {
 		Registry registry = LocateRegistry.getRegistry();
-		IRentalAgency agencyRemote = (IRentalAgency) registry.lookup(rentalAgencyName);
-		return agencyRemote.createManagerSession(name);
+		IRentalAgency rentalAgency = (IRentalAgency) registry.lookup(rentalAgencyName);
+		return rentalAgency.createManagerSession(name);
 	}
 
 	@Override
 	protected void checkForAvailableCarTypes(ReservationSession session, Date start, Date end) throws Exception {
-		// TODO Auto-generated method stub
-		
+		Registry registry = LocateRegistry.getRegistry();
+		IRentalAgency rentalAgency = (IRentalAgency) registry.lookup(rentalAgencyName);
+		System.out.println("Available cartypes: \n");
+		Set<CarType> carTypes = session.getAvailableCartypes(rentalAgency, start, end, null);
+		for(CarType carType: carTypes) {
+			System.out.println(carType+"\n");
+		}
 	}
 
 	@Override
 	protected void addQuoteToSession(ReservationSession session, String name, Date start, Date end, String carType,
 			String region) throws Exception {
-		// TODO Auto-generated method stub
-		
+		Registry registry = LocateRegistry.getRegistry();
+		IRentalAgency rentalAgency = (IRentalAgency) registry.lookup(rentalAgencyName);
+		ReservationConstraints constraints = new ReservationConstraints(start, end, carType, region);
+		session.createQuote(constraints, name, rentalAgency);	
 	}
 
 	@Override
 	protected List<Reservation> confirmQuotes(ReservationSession session, String name) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Registry registry = LocateRegistry.getRegistry();
+		IRentalAgency rentalAgency = (IRentalAgency) registry.lookup(rentalAgencyName);
+		List<Reservation> reservations = session.confirmQuotes(rentalAgency);
+		return reservations;
 	}
 
 	@Override
