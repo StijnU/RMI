@@ -43,7 +43,6 @@ public class ReservationSession implements Serializable{
 		return null;
 	}
 	
-	
 	public Set<Quote> getCurrentQuotes(){
 		return this.currentQuotes;
 	}
