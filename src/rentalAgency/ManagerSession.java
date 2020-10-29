@@ -18,29 +18,29 @@ public class ManagerSession implements  Serializable{
 	private String clientName;
 	private RentalAgency rentalAgency;
 	
- 	public ManagerSession(String clientName, RentalAgency rentalAgency) {
+ 	public ManagerSession(String clientName) {
  		this.clientName = clientName;
- 		this.rentalAgency = rentalAgency;
 	}
 
 
-	public void registerCarRentalCompany(String carRentalCompany) {
+	public void registerCarRentalCompany(String carRentalCompany, RentalAgency rentalAgency) {
 		rentalAgency.setRegisteredCarRentalCompany(carRentalCompany);
 	}
 	
-	public void unregisterCarRentalCompany(String carRentalCompany) {
+	public void unregisterCarRentalCompany(String carRentalCompany,  RentalAgency rentalAgency) {
 		rentalAgency.unsetRegisteredCarRentalCompany(carRentalCompany);
 	}
 	
-	public Set<String> getAllRegisteredCarRentalCompanies(){
+	public Set<String> getAllRegisteredCarRentalCompanies(RentalAgency rentalAgency){
 		return rentalAgency.getAllRegisteredCarRentalCompanies();
 	}
 	
-//	public int getNumberOfReservations(CarType carType, String carRentalCompany) throws RemoteException {
-//		ICarRentalCompany rentalCompany = (ICarRentalCompany) rentalAgency.getCarRentalCompany(carRentalCompany);
-//		return rentalCompany.getReservationAmount(carType);
-//		
-//	}
+	public int getNumberOfReservations(String carTypeName, String carRentalCompany, IRentalAgency rentalAgency) throws RemoteException {
+		ICarRentalCompany rentalCompany = (ICarRentalCompany) rentalAgency.getCarRentalCompany(carRentalCompany);
+		CarType carType = rentalCompany.getCarType(carTypeName);
+		return rentalCompany.getReservationAmount(carType);
+		
+	}
 	
 	
 	

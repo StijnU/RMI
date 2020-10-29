@@ -44,7 +44,7 @@ public class RentalAgency implements IRentalAgency, Serializable{
 		return allRegisteredCarCompanies;
 	}
 	
-	protected ICarRentalCompany getCarRentalCompany(String carRentalCompany) {
+	public ICarRentalCompany getCarRentalCompany(String carRentalCompany) {
 		if(getAllRegisteredCarRentalCompanies().contains(carRentalCompany)) {
 			ICarRentalCompany companyRemote = null;
 			try {
@@ -101,7 +101,7 @@ public class RentalAgency implements IRentalAgency, Serializable{
 	
 	
 	public ManagerSession createManagerSession(String clientName) throws RemoteException {
-			return new ManagerSession(clientName,this);
+			return new ManagerSession(clientName);
 	}
 	
 //	public void createManagerSession(String clientName) {

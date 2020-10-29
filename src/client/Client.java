@@ -127,15 +127,15 @@ public class Client extends AbstractTestManagement<ReservationSession, ManagerSe
 
 	@Override
 	protected int getNumberOfReservationsByRenter(ManagerSession ms, String clientName) throws Exception {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	protected int getNumberOfReservationsForCarType(ManagerSession ms, String carRentalName, String carType)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		Registry registry = LocateRegistry.getRegistry();
+		IRentalAgency rentalAgency = (IRentalAgency) registry.lookup(rentalAgencyName);
+		return ms.getNumberOfReservations(carType, carRentalName, rentalAgency);
 	}
 
 //	@Override

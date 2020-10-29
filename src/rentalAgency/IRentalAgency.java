@@ -19,4 +19,6 @@ public interface IRentalAgency extends Remote{
 	public ManagerSession createManagerSession(String clientName) throws RemoteException;
 	
 	public Map<String,ICarRentalCompany> getAllCarRentalCompanies() throws RemoteException;
+
+	public ICarRentalCompany getCarRentalCompany(String carRentalCompany);
 }
