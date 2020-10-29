@@ -57,30 +57,30 @@ public class RentalAgency implements IRentalAgency{
 	
 	
 	//Helper
-//	public Map<String,ICarRentalCompany> getAllCarRentalCompanies(){	
-//		
-//		Map <String, ICarRentalCompany> AllCarRentalCompanies = new HashMap<String, ICarRentalCompany>();
-//
-//		try {	
-//			Registry registry = LocateRegistry.getRegistry();
-//			String[] allCarRentalCompanyNames = registry.list();
-//			
-//			for (String crc : allCarRentalCompanyNames) {
-//				try {
-//						ICarRentalCompany companyRemote = (ICarRentalCompany) registry.lookup(crc);
-//						AllCarRentalCompanies.put(companyRemote.getName(), companyRemote);
-//						}
-//				catch(NotBoundException e) 
-//				{System.err.println("Could not find car rental company with given name " + crc);
-//				}
-//			}
-//		}
-//		catch(RemoteException e) {
-//				System.err.println(e.getMessage());	}
-//	
-//		return AllCarRentalCompanies;
-//		
-//	}
+	public Map<String,ICarRentalCompany> getAllCarRentalCompanies(){	
+		
+		Map <String, ICarRentalCompany> AllCarRentalCompanies = new HashMap<String, ICarRentalCompany>();
+
+		try {	
+			Registry registry = LocateRegistry.getRegistry();
+			String[] allCarRentalCompanyNames = registry.list();
+			
+			for (String crc : allCarRentalCompanyNames) {
+				try {
+						ICarRentalCompany companyRemote = (ICarRentalCompany) registry.lookup(crc);
+						AllCarRentalCompanies.put(companyRemote.getName(), companyRemote);
+						}
+				catch(NotBoundException e) 
+				{System.err.println("Could not find car rental company with given name " + crc);
+				}
+			}
+		}
+		catch(RemoteException e) {
+				System.err.println(e.getMessage());	}
+	
+		return AllCarRentalCompanies;
+		
+	}
 
 
 
