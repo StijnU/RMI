@@ -27,6 +27,7 @@ public class RentalAgency implements IRentalAgency, Serializable{
 
 	public RentalAgency(String name) {
 		this.name = name;
+		this.allRegisteredCarCompanies = new HashSet<String>();
 	}
 
 	
@@ -71,14 +72,16 @@ public class RentalAgency implements IRentalAgency, Serializable{
 		try {	
 			Registry registry = LocateRegistry.getRegistry();
 			String[] allCarRentalCompanyNames = registry.list();
-			
 			for (String crc : allCarRentalCompanyNames) {
-				try {
-						ICarRentalCompany companyRemote = (ICarRentalCompany) registry.lookup(crc);
-						AllCarRentalCompanies.put(companyRemote.getName(), companyRemote);
-						}
-				catch(NotBoundException e) 
-				{System.err.println("Could not find car rental company with given name " + crc);
+				if(allRegisteredCarCompanies.contains(crc)) {
+					try {
+							ICarRentalCompany companyRemote = (ICarRentalCompany) registry.lookup(crc);
+	
+							AllCarRentalCompanies.put(companyRemote.getName(), companyRemote);
+							}
+					catch(NotBoundException e) 
+					{System.err.println("Could not find car rental company with given name " + crc);
+					}
 				}
 			}
 		}
@@ -96,24 +99,29 @@ public class RentalAgency implements IRentalAgency, Serializable{
 			return new ReservationSession(clientName);
 	}
 	
-	public void createManagerSession(String clientName) {
-		// locate registry
-		ManagerSession managersession = new ManagerSession(clientName, this);
-		
-					Registry registry = null;
-					registry = LocateRegistry.getRegistry();
-					
-					// register car rental company
-					IManagerSession stub;
-					System.out.println("Manager session is starting...");
-					try {
-						stub = (IManagerSession) UnicastRemoteObject.exportObject(managersession, null);
-//						registry.rebind(clientName, stub);
-					} catch (RemoteException e) {
-						logger.log(Level.SEVERE, "could not register stub");
-						logger.log(Level.SEVERE, e.getMessage());
-					}
+	
+	public ManagerSession createManagerSession(String clientName) throws RemoteException {
+			return new ManagerSession(clientName,this);
 	}
+	
+//	public void createManagerSession(String clientName) {
+//		// locate registry
+//		ManagerSession managersession = new ManagerSession(clientName, this);
+//		
+//					Registry registry = null;
+//					registry = LocateRegistry.getRegistry();
+//					
+//					// register car rental company
+//					IManagerSession stub;
+//					System.out.println("Manager session is starting...");
+//					try {
+//						stub = (IManagerSession) UnicastRemoteObject.exportObject(managersession, null);
+////						registry.rebind(clientName, stub);
+//					} catch (RemoteException e) {
+//						logger.log(Level.SEVERE, "could not register stub");
+//						logger.log(Level.SEVERE, e.getMessage());
+//					}
+//	}
 
 
 

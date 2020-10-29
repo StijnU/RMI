@@ -87,7 +87,6 @@ public class Client extends AbstractTestManagement<ReservationSession, ManagerSe
 	protected ReservationSession getNewReservationSession(String name) throws Exception {
 		Registry registry = LocateRegistry.getRegistry();
 		IRentalAgency rentalAgency = (IRentalAgency) registry.lookup(rentalAgencyName);
-		
 		return rentalAgency.createReservationSession(name);
 	}
 

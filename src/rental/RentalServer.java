@@ -27,6 +27,7 @@ public class RentalServer {
 	
 	private final static int LOCAL = 0;
 	private final static int REMOTE = 1;
+	private String rentalAgency = "rental-agency";
 
 	private static Logger logger = Logger.getLogger(RentalServer.class.getName());
 
