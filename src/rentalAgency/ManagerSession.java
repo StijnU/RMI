@@ -8,7 +8,7 @@ import rental.CarRentalCompany;
 import rental.CarType;
 import rental.ICarRentalCompany;
 
-public class ManagerSession implements IManagerSession, Serializable{
+public class ManagerSession implements  Serializable{
 
 
 	/***************
