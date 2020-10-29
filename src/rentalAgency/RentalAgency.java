@@ -1,21 +1,28 @@
 package rentalAgency;
 
+import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import rental.CarRentalCompany;
 import rental.ICarRentalCompany;
+import rental.RentalServer;
 
-public class RentalAgency implements IRentalAgency{
+public class RentalAgency implements IRentalAgency, Serializable{
 	
 	private String name;
 	private Set<String> allRegisteredCarCompanies;
+
+	private static Logger logger = Logger.getLogger(RentalServer.class.getName());
 
 
 	public RentalAgency(String name) {
@@ -89,9 +96,23 @@ public class RentalAgency implements IRentalAgency{
 			return new ReservationSession(clientName);
 	}
 	
-	@Override
-	public ManagerSession createManagerSession(String clientName) throws RemoteException {
-			return new ManagerSession(clientName, this);
+	public void createManagerSession(String clientName) {
+		// locate registry
+		ManagerSession managersession = new ManagerSession(clientName, this);
+		
+					Registry registry = null;
+					registry = LocateRegistry.getRegistry();
+					
+					// register car rental company
+					IManagerSession stub;
+					System.out.println("Manager session is starting...");
+					try {
+						stub = (IManagerSession) UnicastRemoteObject.exportObject(managersession, null);
+//						registry.rebind(clientName, stub);
+					} catch (RemoteException e) {
+						logger.log(Level.SEVERE, "could not register stub");
+						logger.log(Level.SEVERE, e.getMessage());
+					}
 	}
 
 

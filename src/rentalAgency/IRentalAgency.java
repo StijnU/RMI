@@ -14,5 +14,5 @@ public interface IRentalAgency extends Remote{
 	
 	public ReservationSession createReservationSession(String clientName) throws RemoteException;
 
-	public ManagerSession createManagerSession(String clientName) throws RemoteException;
+	public void createManagerSession(String clientName) throws RemoteException;
 }
