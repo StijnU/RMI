@@ -1,5 +1,6 @@
 package rentalAgency;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Set;
 
@@ -7,7 +8,7 @@ import rental.CarRentalCompany;
 import rental.CarType;
 import rental.ICarRentalCompany;
 
-public class ManagerSession {
+public class ManagerSession implements  Serializable{
 
 
 	/***************
@@ -35,11 +36,11 @@ public class ManagerSession {
 		return rentalAgency.getAllRegisteredCarRentalCompanies();
 	}
 	
-	public int getNumberOfReservations(CarType carType, String carRentalCompany) throws RemoteException {
-		ICarRentalCompany rentalCompany = rentalAgency.getCarRentalCompany(carRentalCompany);
-		return rentalCompany.getReservationAmount(carType);
-		
-	}
+//	public int getNumberOfReservations(CarType carType, String carRentalCompany) throws RemoteException {
+//		ICarRentalCompany rentalCompany = (ICarRentalCompany) rentalAgency.getCarRentalCompany(carRentalCompany);
+//		return rentalCompany.getReservationAmount(carType);
+//		
+//	}
 	
 	
 	

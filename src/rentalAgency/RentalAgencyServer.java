@@ -33,13 +33,15 @@ public class RentalAgencyServer {
 			String rentalAgency = "rental-agency";
 			RentalAgency RA = new RentalAgency(rentalAgency);
 			
+			RA.setRegisteredCarRentalCompany("Dockx");
+			RA.setRegisteredCarRentalCompany("Hertz");
+			
 			// set security manager if non existent
 			if (System.getSecurityManager() != null)
 				System.setSecurityManager(null);
 
 			// locate registry
 			Registry registry = null;
-
 			try {
 				registry = LocateRegistry.getRegistry();
 				
