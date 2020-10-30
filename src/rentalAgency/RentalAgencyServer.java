@@ -55,7 +55,7 @@ public class RentalAgencyServer {
 			System.out.println("Agency is starting...");
 			try {
 				stub = (IRentalAgency) UnicastRemoteObject.exportObject(RA, 0);
-				registry.rebind(RA.getName(), stub);
+				registry.rebind("rental-agency", stub);
 			} catch (RemoteException e) {
 				logger.log(Level.SEVERE, "could not register stub");
 				logger.log(Level.SEVERE, e.getMessage());
