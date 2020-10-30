@@ -19,8 +19,8 @@ public class CarRentalCompany implements ICarRentalCompany{
 	private String name;
 	private List<Car> cars;
 	private Map<String,CarType> carTypes = new HashMap<String, CarType>();
-	private Map<CarType, Integer> reservationAmount = new HashMap<CarType, Integer>();
-
+	private Map<CarType, Integer> carTypeReservationAmount = new HashMap<CarType, Integer>();
+	private Map<String, Integer> clientReservationAmount = new HashMap<String, Integer>();
 	/***************
 	 * CONSTRUCTOR *
 	 ***************/
@@ -33,7 +33,7 @@ public class CarRentalCompany implements ICarRentalCompany{
 		for(Car car:cars)
 			carTypes.put(car.getType().getName(), car.getType());
 		for(Car car:cars)
-			reservationAmount.put(car.getType(), 0);
+			carTypeReservationAmount.put(car.getType(), 0);
 		logger.log(Level.INFO, this.toString());
 	}
 
@@ -159,7 +159,21 @@ public class CarRentalCompany implements ICarRentalCompany{
 		
 		Reservation res = new Reservation(quote, car.getId());
 		car.addReservation(res);
-		reservationAmount.put(car.getType(), reservationAmount.get(car.getType()) + 1);
+		carTypeReservationAmount.put(car.getType(), carTypeReservationAmount.get(car.getType()) + 1);
+		
+		String carRenter = quote.getCarRenter();
+		if(clientReservationAmount.containsKey(carRenter)) {
+			clientReservationAmount.put(carRenter, clientReservationAmount.get(carRenter) + 1);
+		}else {
+			clientReservationAmount.put(carRenter, 1);
+		}
+		logger.log(Level.INFO, "-------------------------------------ALL CLIENTS RESERVATION AMOUNT AND COMPANY: "+clientReservationAmount+" , "+this.name+"----------------------");
+
+		
+		
+			
+			
+		
 		return res;
 	}
 
@@ -186,8 +200,15 @@ public class CarRentalCompany implements ICarRentalCompany{
 	}
 	
 	public Integer getReservationAmount(CarType carType) {
-		Integer nb = this.reservationAmount.get(carType);
+		Integer nb = this.carTypeReservationAmount.get(carType);
 		return nb;
 	}
 	
+	/****************
+	 * 	 Clients	*
+	 ****************/
+	
+	public Map<String, Integer> getClientReservationAmount() {
+		return this.clientReservationAmount;
+	}
 }

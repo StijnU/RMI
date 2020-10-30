@@ -61,8 +61,12 @@ public class Client extends AbstractTestManagement<ReservationSession, ManagerSe
 	
 	@Override
 	protected Set<String> getBestClients(ManagerSession ms) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Registry registry = LocateRegistry.getRegistry();
+		IRentalAgency rentalAgency = (IRentalAgency) registry.lookup(rentalAgencyName);
+		Set<String> bestClients = ms.getBestClients(rentalAgency);
+		System.out.println(ms.getClientReservationAmount(rentalAgency));
+		System.out.println(bestClients);
+		return bestClients;
 	}
 
 	@Override

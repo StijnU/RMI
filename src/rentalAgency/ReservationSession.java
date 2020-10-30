@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -55,11 +56,11 @@ public class ReservationSession implements Serializable{
 		Map<String, ICarRentalCompany> companySet = rentalAgency.getAllCarRentalCompanies();
 		List<Reservation> reservations = new ArrayList<Reservation>();
 		for (Quote quote: currentQuotes) {
-			String carRenter = quote.getRentalCompany();
+			String carRentalCompany = quote.getRentalCompany();
 			for (Entry<String, ICarRentalCompany> crc: companySet.entrySet()) {
 				ICarRentalCompany company = crc.getValue();
 				String companyName = company.getName();
-				if (companyName == carRenter) {
+				if (companyName.equals(carRentalCompany)) {
 					Reservation reservation = company.confirmQuote(quote);
 					reservations.add(reservation); 
 			
@@ -96,6 +97,7 @@ public class ReservationSession implements Serializable{
 	
 	public CarType getCheapestCarType(IRentalAgency rentalAgency, Date start, Date end, String region) throws RemoteException {
 		Set<CarType> carTypes = this.getAvailableCartypes(rentalAgency, start, end, region);
+		System.out.println(carTypes);
 		Iterator<CarType> iterator = carTypes.iterator();
 		CarType cheapestCarType = iterator.next();
 		double cheapestPrice = cheapestCarType.getRentalPricePerDay();

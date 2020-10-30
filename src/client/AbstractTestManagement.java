@@ -92,8 +92,10 @@ public abstract class AbstractTestManagement<ReservationSession, ManagerSession>
            Set<String> bestClientsShouldBe = new HashSet<String>(Arrays.asList(scriptLineTokens.nextToken().split("/")));
            Set<String> bestClientsAre = null;
 			try {
-				ManagerSession aMgmtSession = getNewManagerSession("CarRent");	            
+				ManagerSession aMgmtSession = getNewManagerSession("CarRent");
+				  System.out.println(bestClientsShouldBe);
 	            bestClientsAre = new HashSet<>(getBestClients(aMgmtSession));
+	          
 			} catch (Exception e) { throw new ApplicationException(e); }
 
            if (bestClientsShouldBe.equals(bestClientsAre)) {
