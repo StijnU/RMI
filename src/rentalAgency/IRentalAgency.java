@@ -20,5 +20,5 @@ public interface IRentalAgency extends Remote{
 	
 	public Map<String,ICarRentalCompany> getAllCarRentalCompanies() throws RemoteException;
 
-	public ICarRentalCompany getCarRentalCompany(String carRentalCompany);
+	public ICarRentalCompany getCarRentalCompany(String carRentalCompany) throws RemoteException;
 }
