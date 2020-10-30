@@ -78,13 +78,12 @@ public class CarRentalCompany implements ICarRentalCompany{
 		throw new IllegalArgumentException("<" + carTypeName + "> No car type of name " + carTypeName);
 	}
 	
-	// mark
 	public boolean isAvailable(String carTypeName, Date start, Date end) {
 		logger.log(Level.INFO, "<{0}> Checking availability for car type {1}", new Object[]{name, carTypeName});
 		if(carTypes.containsKey(carTypeName)) {
 			return getAvailableCarTypes(start, end).contains(carTypes.get(carTypeName));
 		} else {
-			throw new IllegalArgumentException("<" + carTypeName + "> No car type of name " + carTypeName);
+			return false;
 		}
 	}
 	
@@ -141,7 +140,6 @@ public class CarRentalCompany implements ICarRentalCompany{
 		CarType type = getCarType(constraints.getCarType());
 		
 		double price = calculateRentalPrice(type.getRentalPricePerDay(),constraints.getStartDate(), constraints.getEndDate());
-		
 		return new Quote(client, constraints.getStartDate(), constraints.getEndDate(), getName(), constraints.getCarType(), price);
 	}
 

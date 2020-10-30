@@ -30,11 +30,11 @@ public class ReservationSession implements Serializable{
 	
 	public ReservationSession(String clientName) {
 		this.clientName = clientName;
+		this.currentQuotes = new HashSet<Quote>();
 	}
 	
 	public void createQuote(ReservationConstraints constraints, String client, IRentalAgency rentalAgency) throws RemoteException, ReservationException {
 		Map<String, ICarRentalCompany> companySet = rentalAgency.getAllCarRentalCompanies();
-
 		for (Entry<String, ICarRentalCompany> crc: companySet.entrySet()) {
 			ICarRentalCompany company = crc.getValue();
 			try {
