@@ -141,7 +141,6 @@ public class CarRentalCompany implements ICarRentalCompany{
 		CarType type = getCarType(constraints.getCarType());
 		
 		double price = calculateRentalPrice(type.getRentalPricePerDay(),constraints.getStartDate(), constraints.getEndDate());
-		
 		return new Quote(client, constraints.getStartDate(), constraints.getEndDate(), getName(), constraints.getCarType(), price);
 	}
 
