@@ -2,4 +2,4 @@
 Stijn Uytterhoeven, Louis Stalpaert
 
 ## Description
-A car rental application using java RMI. 
+Backend of a car rental application using java RMI. 
